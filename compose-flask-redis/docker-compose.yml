@@ -1,0 +1,61 @@
+services:
+  web:
+    build: .
+    image: flask-redis-app:1.0
+    container_name: flask-web
+    ports:
+      - "8084:5000"
+    environment:
+      REDIS_HOST: redis
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+    depends_on:
+      redis:
+        condition: service_healthy
+    networks:
+      - frontend
+      - backend
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:5000/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    # Sécurité
+    read_only: true
+    tmpfs:
+      - /tmp
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    mem_limit: 256m
+    cpus: 0.5
+    pids_limit: 100
+
+  redis:
+    image: redis:7.4-alpine
+    container_name: flask-redis
+    command: ["redis-server", "--requirepass", "${REDIS_PASSWORD}", "--appendonly", "yes"]
+    volumes:
+      - redis-data:/data
+    networks:
+      - backend
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "${REDIS_PASSWORD}", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    # Sécurité
+    security_opt:
+      - no-new-privileges:true
+    mem_limit: 128m
+    cpus: 0.5
+
+networks:
+  frontend:
+  backend:
+    internal: true
+
+volumes:
+  redis-data:
