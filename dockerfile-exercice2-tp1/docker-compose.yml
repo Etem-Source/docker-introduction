@@ -1,0 +1,22 @@
+services:
+  quiz-docker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: quiz-docker:secure
+    container_name: quiz-docker-compose
+    ports:
+      - "8082:8080"
+    restart: unless-stopped
+
+    # Sécurité : limitation des ressources
+    mem_limit: 128m
+    cpus: 0.5
+    pids_limit: 50
+
+    # Sécurité : restriction des privilèges
+    read_only: true
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
