@@ -1,3 +1,4 @@
+# Sécurité : uniquement COPY (pas de ADD) pour un comportement prévisible
 # Étape 1 : construction
 FROM node:22.23.5-alpine3.24 AS build
 WORKDIR /app
