@@ -1,0 +1,15 @@
+# Dépendances et build locaux (reconstruits dans l'image)
+node_modules
+dist
+
+# Git et fichiers Docker
+.git
+.gitignore
+Dockerfile*
+.dockerignore
+
+# Fichiers sensibles et inutiles
+.env
+*.log
+*.md
+scan-*.txt
