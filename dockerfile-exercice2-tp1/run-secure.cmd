@@ -1,3 +1,5 @@
+REM Sécurité : aucun montage de /var/run/docker.sock dans le conteneur
+
 docker rm -f quiz-step4
 docker run -d --name quiz-secure -p 8092:8080 ^
   --memory="128m" ^
